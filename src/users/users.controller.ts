@@ -9,8 +9,8 @@ export class UsersController {
 
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
-        const { email, name } = createUserDto;
-        return this.usersService.create(email, name)
+
+        return this.usersService.create(createUserDto)
     }
     @Get()
     findAll() {
