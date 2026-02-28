@@ -1,10 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 import * as bcrypt from 'bcrypt'
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +35,7 @@ export class UsersService {
             username,
             password: hashedPassword
         });
-        return this.userRepo.save(user)
+        return await this.userRepo.save(user)
 
     }
     findAll() {
@@ -42,6 +43,23 @@ export class UsersService {
     }
     findOne(id: string) {
         return this.userRepo.findOneBy({ id })
+    }
+
+    async update(id: string, user: UpdateUserDto) {
+
+        await this.userRepo.update({ id }, user)
+
+        return await this.findOne(id)
+    }
+
+    async remove(id: string) {
+
+        const removed = await (await this.userRepo.delete(id))
+
+        if (removed.affected === 0)
+            return new NotFoundException().getResponse()
+
+        return { message: "User Deleted Succesfully" }
     }
 
 }
