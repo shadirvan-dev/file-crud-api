@@ -28,16 +28,18 @@ export class UsersService {
         if (existing) {
             throw new ConflictException('Email or username already exists');
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = this.userRepo.create({
-            email,
-            name,
-            username,
-            password: hashedPassword
-        });
+
+        const user = this.userRepo.create(createUserDto);
         return await this.userRepo.save(user)
 
     }
+
+    async findByEmail(email: string) {
+
+        return await this.userRepo.findOne({ where: { email } })
+
+    }
+
     findAll() {
         return this.userRepo.find();
     }
