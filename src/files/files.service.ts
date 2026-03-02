@@ -87,6 +87,32 @@ export class FilesService {
         throw new UnauthorizedException('Download link expired or invalid');
       }
     }
+
   }
 
+  async deleteFile(fileId: string, userId: string) {
+    const file = await this.fileRepo.findOne({ where: { id: fileId } });
+
+    if (!file) {
+      throw new NotFoundException('File not found');
+    }
+
+    if (file.ownerId !== userId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    const filePath = path.join(
+      'uploads',
+      userId,
+      file.storedName,
+    );
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await this.fileRepo.delete(fileId);
+
+    return { message: 'File deleted successfully' };
+  }
 }

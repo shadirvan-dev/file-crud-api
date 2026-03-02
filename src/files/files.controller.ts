@@ -62,4 +62,16 @@ export class FilesController {
     this.filesService.downloadFile(token, res)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Delete(':fileId')
+  deleteFile(
+    @Param('fileId') fileId: string,
+    @Req() req,
+  ) {
+    return this.filesService.deleteFile(
+      fileId,
+      req.user.id,
+    );
+  }
+
 }
