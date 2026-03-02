@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
+import { JwtService } from '@nestjs/jwt';
+
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -63,5 +65,7 @@ export class UsersService {
 
         return { message: "User Deleted Succesfully" }
     }
+
+
 
 }

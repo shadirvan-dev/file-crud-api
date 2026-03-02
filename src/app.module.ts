@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
     database: process.env.DB_NAME,
     autoLoadEntities: true,
     synchronize: true, // TODO: Production - Remove this.
-  }), UsersModule, AuthModule],
+  }), UsersModule, AuthModule, FilesModule],
   controllers: [AppController],
   providers: [AppService],
 })
