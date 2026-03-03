@@ -1,5 +1,7 @@
 # Innovature Backend Assignment Task 2
 
+- Framework : Nest.js with Express Adapter
+
 ## Features
 
 - User CRUD Operation : Create, Read, Update, Delete
