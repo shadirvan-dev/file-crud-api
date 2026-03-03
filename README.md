@@ -12,20 +12,27 @@
 ### User Operations
 
 Create User : **POST**   : /users/
+
 Update User : **PATCH**  : /users/{{user-id}}
+
 Delete User : **DELETE** : /users/{{user-id}}
+
 Fetch User  : **GET**    : /users/profile
 
 ### Auth Operations
 
 User Login    : **POST**    : /auth/login
+
 Refresh Token : **POST**    : /auth/refresh
 
 ### File Operations
 
 Upload Files      : **POST**    : /files/upload
+
 Fetch User Files  : **GET**     : /files/my-files
+
 Generate  Link    : **GET**     : /files/generate-link/{{file-id}}
+
 Delete File       : **DELETE**  : /files/{{file-id}}
 
 ## How To Test Backend?
