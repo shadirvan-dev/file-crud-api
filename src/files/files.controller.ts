@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Req, Query, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Req, Query, Res, BadRequestException } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
@@ -28,6 +28,13 @@ export class FilesController {
       }
 
     }),
+    fileFilter: (req, file, cb) => {
+      if (!file.mimetype.startsWith('image/')) {
+        return cb(new BadRequestException('Only image files are allowed'), false)
+      }
+
+      cb(null, true)
+    },
     limits: { fileSize: 100 * 1024 * 1024 }
   }))
   uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
