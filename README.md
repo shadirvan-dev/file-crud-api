@@ -41,7 +41,7 @@ Delete File       : **DELETE**  : /files/{{file-id}}
 
 - Clone the Repository
 - Install Dependencies : `npm install`
-- Rename the .env.example to .env . populate with the required values
+- Rename the `.env.example` to `.env` . populate with the required values
 - Start Server : `npm run start:dev`
 - Import the postman collection to postman app.
 - Test Each endpoint with necessary header or body.
