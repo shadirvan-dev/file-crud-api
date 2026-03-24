@@ -1,13 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Req, Query, Res, BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseFilePipeBuilder,
+  Post,
+  Query,
+  Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FilesService } from './files.service';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import type { Response } from 'express';
 import path from 'path';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
+import { DownloadFileQueryDto } from './dto/download-file-query.dto';
+import { FileIdParamDto } from './dto/file-id-param.dto';
 
 @Controller('files')
 export class FilesController {
@@ -37,7 +51,18 @@ export class FilesController {
     },
     limits: { fileSize: 100 * 1024 * 1024 }
   }))
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
+  uploadFile(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({
+          maxSize: 100 * 1024 * 1024,
+          message: 'file size must not exceed 100MB',
+        })
+        .build({ fileIsRequired: true }),
+    )
+    file: Express.Multer.File,
+    @Req() req,
+  ) {
     return this.filesService.handleFileUpload(file, req.user.id)
   }
 
@@ -50,12 +75,12 @@ export class FilesController {
   @UseGuards(JwtAuthGuard)
   @Get('generate-link/:fileId')
   getDownloadLink(
-    @Param('fileId') fileId: string,
+    @Param() params: FileIdParamDto,
     @Req() req,
 
   ) {
     return this.filesService.generateDownloadLink(
-      fileId,
+      params.fileId,
       req.user.id,
     );
   }
@@ -63,20 +88,20 @@ export class FilesController {
 
   @Get('download')
   downloadFile(
-    @Query('token') token: string,
+    @Query() query: DownloadFileQueryDto,
     @Res() res: Response,
   ) {
-    this.filesService.downloadFile(token, res)
+    this.filesService.downloadFile(query.token, res)
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':fileId')
   deleteFile(
-    @Param('fileId') fileId: string,
+    @Param() params: FileIdParamDto,
     @Req() req,
   ) {
     return this.filesService.deleteFile(
-      fileId,
+      params.fileId,
       req.user.id,
     );
   }
