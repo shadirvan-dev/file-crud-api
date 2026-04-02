@@ -100,7 +100,7 @@ export class AuthService {
 
         return this.jwtService.signAsync(payload, {
             secret: this.accessTokenSecret,
-            expiresIn: (process.env.JWT_ACCESS_EXPIRES_IN ?? '15m') as never,
+            expiresIn: (process.env.JWT_ACCESS_EXPIRES_IN ?? '3m') as never,
         })
     }
 

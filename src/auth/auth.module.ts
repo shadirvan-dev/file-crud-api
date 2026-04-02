@@ -11,12 +11,7 @@ import { RefreshJwtStrategy } from './strategy/refresh.strategy';
 import { RefreshTokenRevocation } from './entities/refresh-token-revocation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, RefreshTokenRevocation]), JwtModule.register({
-    secret: process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET,
-    signOptions: {
-      expiresIn: (process.env.JWT_ACCESS_EXPIRES_IN ?? '15m') as never
-    }
-  })],
+  imports: [TypeOrmModule.forFeature([User, RefreshTokenRevocation]), JwtModule.register({})],
   controllers: [AuthController],
   providers: [AuthService, UsersService, LocalStrategy, JwtStrategy, RefreshJwtStrategy],
 

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { UserIdParamDto } from './dto/user-id-param.dto';
+import { UpdatePasswordDto } from 'src/users/dto/update-password.dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,6 +23,12 @@ export class UsersController {
         return this.usersService.findOne(req.user.id)
     }
 
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('password')
+    updatePassword(@Req() req, @Body() updatePasswordDto: UpdatePasswordDto) {
+        return this.usersService.updatePassword(req.user.id, updatePasswordDto);
+    }
 
     @Patch(':id')
     update(@Param() params: UserIdParamDto, @Body() updateUserDto: UpdateUserDto) {
